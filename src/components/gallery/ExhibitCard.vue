@@ -163,7 +163,7 @@ const isAnonymous = computed(() => props.exhibit.diary.isAnonymous)
         <span class="font-vt323">
           {{ diaryType?.name || '未知类型' }}
         </span>
-        <span class="font-vt323">
+        <span v-if="!isAnonymous" class="font-vt323">
           管线: {{ exhibit.diary.pipeline.filter(p => p.enabled).length }} 种
         </span>
       </div>

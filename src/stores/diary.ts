@@ -500,6 +500,15 @@ export const useDiaryStore = defineStore('diary', () => {
     return diaries.value.filter(d => d.ownerId === userId)
   }
 
+  function getVisibleDiariesByUser(userId: string, visitorId: string | null): Diary[] {
+    return diaries.value.filter(d => {
+      if (d.ownerId !== userId) return false
+      if (!d.isPublic) return false
+      if (d.isAnonymous && d.ownerId !== visitorId) return false
+      return true
+    })
+  }
+
   const publicDiaries = computed(() => {
     const now = globalTimeline.getTime()
     return diaries.value.filter(d => {
@@ -776,6 +785,7 @@ export const useDiaryStore = defineStore('diary', () => {
     rewindState,
     getDecayLevel,
     getDiariesByUser,
+    getVisibleDiariesByUser,
     archiveDiary,
     restoreDiary,
     addRepairRecord,

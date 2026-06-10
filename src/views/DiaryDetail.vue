@@ -34,6 +34,11 @@ const {
 
 const { itemsByRarity, useItem } = useItems()
 
+const isAnonymousToVisitor = computed(() => {
+  if (!currentDiary.value) return false
+  return currentDiary.value.isAnonymous && !isOwner.value
+})
+
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const showItemSelector = ref(false)
 const showDeleteConfirm = ref(false)
@@ -283,7 +288,7 @@ function formatTime(offset: number): string {
           ></canvas>
         </div>
         
-        <div v-if="isOwner && !isScheduled" class="mt-4">
+        <div v-if="isOwner && !isScheduled && !isAnonymousToVisitor" class="mt-4">
           <label class="block font-vt323 text-gray-400 mb-2 text-sm">
             {{ isDead ? '时间回溯: 拖动滑块查看过去的状态' : '时间预览: 拖动滑块查看过去或未来的状态' }}
           </label>
@@ -366,7 +371,7 @@ function formatTime(offset: number): string {
               <span class="text-gray-500 font-vt323">衰变率:</span>
               <span class="font-vt323">x{{ diaryType?.decayRate || 1 }}</span>
             </div>
-            <div class="flex justify-between">
+            <div v-if="!isAnonymousToVisitor" class="flex justify-between">
               <span class="text-gray-500 font-vt323">创建时间:</span>
               <span class="font-vt323">{{ Math.floor(currentDiary.createdAt) }}</span>
             </div>
@@ -376,7 +381,7 @@ function formatTime(offset: number): string {
             </div>
           </div>
           
-          <div v-if="hasSchedule" class="mt-4 pt-4 border-t border-gray-700">
+          <div v-if="hasSchedule && !isAnonymousToVisitor" class="mt-4 pt-4 border-t border-gray-700">
             <h4 class="font-vt323 text-blue-400 mb-3 text-sm">⏰ 定时设置</h4>
             <div class="space-y-2 text-sm">
               <div v-if="currentDiary.schedule.publishAt" class="flex justify-between items-center">
@@ -407,7 +412,7 @@ function formatTime(offset: number): string {
           </div>
         </div>
         
-        <div class="bg-gray-900/80 rounded-lg p-4 border border-gray-800">
+        <div v-if="!isAnonymousToVisitor" class="bg-gray-900/80 rounded-lg p-4 border border-gray-800">
           <h3 class="font-vt323 text-lg text-diary-fresh mb-3">
             🧪 渲染管线 ({{ currentDiary.pipeline.filter(p => p.enabled).length }})
           </h3>

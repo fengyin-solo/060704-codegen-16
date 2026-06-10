@@ -23,11 +23,11 @@ const filteredUsers = computed(() => {
 })
 
 function getUserDiaryCount(userId: string): number {
-  return diaryStore.getDiariesByUser(userId).filter(d => d.isPublic).length
+  return diaryStore.getVisibleDiariesByUser(userId, userStore.currentUserId).length
 }
 
 function getUserDiaryStates(userId: string): Record<string, number> {
-  const diaries = diaryStore.getDiariesByUser(userId).filter(d => d.isPublic)
+  const diaries = diaryStore.getVisibleDiariesByUser(userId, userStore.currentUserId)
   const states: Record<string, number> = {}
   diaries.forEach(d => {
     states[d.state] = (states[d.state] || 0) + 1

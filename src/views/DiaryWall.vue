@@ -33,10 +33,8 @@ const wallOwner = computed(() => {
 const diaries = computed(() => {
   if (route.params.userId) {
     const now = globalTimeline.getTime()
-    return diaryStore.getDiariesByUser(route.params.userId as string)
+    return diaryStore.getVisibleDiariesByUser(route.params.userId as string, userStore.currentUserId)
       .filter(d => {
-        if (!d.isPublic) return false
-        if (d.isAnonymous) return false
         if (d.state === 'scheduled') return false
         if (d.schedule.publishAt && d.schedule.publishAt > now) return false
         return true
