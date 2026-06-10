@@ -131,6 +131,7 @@ export interface Diary {
   pipeline: PipelineStep[]
   tombstone?: string
   isPublic: boolean
+  isAnonymous: boolean
   schedule: DiarySchedule
   decayStartTime: number | null
 }

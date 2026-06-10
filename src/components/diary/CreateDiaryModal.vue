@@ -21,6 +21,7 @@ const selectedType = ref('base')
 const selectedMethods = ref<string[]>(['blur', 'chroma'])
 const isCreating = ref(false)
 const showSchedule = ref(false)
+const isAnonymous = ref(false)
 
 const enablePublishAt = ref(false)
 const enableDecayStartAt = ref(false)
@@ -106,7 +107,8 @@ async function handleCreate() {
     title.value.trim(),
     content.value.trim(),
     pipeline,
-    schedule
+    schedule,
+    isAnonymous.value
   )
   
   setTimeout(() => {
@@ -225,6 +227,22 @@ function formatTime(offset: number): string {
             <p class="text-gray-500 text-xs mt-1 font-vt323">
               渲染顺序会影响最终效果，之后可以在管线编辑器中调整
             </p>
+          </div>
+          
+          <div class="border-t border-gray-700 pt-4">
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                v-model="isAnonymous"
+                class="w-5 h-5 accent-purple-500"
+              />
+              <div>
+                <span class="font-vt323 text-lg text-purple-400">🎭 匿名投递</span>
+                <p class="text-gray-500 text-xs font-vt323 mt-1">
+                  隐藏作者身份，其他人只能看到内容与腐烂轨迹
+                </p>
+              </div>
+            </label>
           </div>
           
           <div class="border-t border-gray-700 pt-4">

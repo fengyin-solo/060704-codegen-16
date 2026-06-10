@@ -36,6 +36,7 @@ const diaries = computed(() => {
     return diaryStore.getDiariesByUser(route.params.userId as string)
       .filter(d => {
         if (!d.isPublic) return false
+        if (d.isAnonymous) return false
         if (d.state === 'scheduled') return false
         if (d.schedule.publishAt && d.schedule.publishAt > now) return false
         return true

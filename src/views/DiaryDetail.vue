@@ -309,7 +309,7 @@ function formatTime(offset: number): string {
         <div class="bg-gray-900/80 rounded-lg p-4 border border-gray-800">
           <h2 class="font-vt323 text-2xl mb-2">{{ currentDiary.title }}</h2>
           
-          <div class="flex items-center gap-2 mb-4">
+          <div class="flex items-center gap-2 mb-4 flex-wrap">
             <span 
               class="state-indicator"
               :style="{ color: stateColor, borderColor: stateColor }"
@@ -321,6 +321,12 @@ function formatTime(offset: number): string {
               class="px-2 py-1 rounded text-xs font-vt323 bg-diary-frozen/20 text-diary-frozen border border-diary-frozen"
             >
               ❄️ 已冻结
+            </span>
+            <span 
+              v-if="currentDiary.isAnonymous"
+              class="px-2 py-1 rounded text-xs font-vt323 bg-purple-900/50 text-purple-300 border border-purple-700"
+            >
+              🎭 匿名投递
             </span>
           </div>
           

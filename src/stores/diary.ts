@@ -190,6 +190,7 @@ export const useDiaryStore = defineStore('diary', () => {
       text: string
       pipeline: string[]
       createdAtOffset: number
+      isAnonymous?: boolean
     }>> = {
       '故障收藏家': [
         {
@@ -212,6 +213,14 @@ export const useDiaryStore = defineStore('diary', () => {
           text: '今天天气很好。早上喝了一杯咖啡，看了几页书。下午去公园散步，看到一只猫在晒太阳。没有什么特别的事情发生，但这样平静的日子，也许就是幸福吧。',
           pipeline: ['blur', 'chroma'],
           createdAtOffset: 30
+        },
+        {
+          title: '无法说出口的秘密',
+          type: 'base',
+          text: '有些话，永远无法对别人说出口。也许在匿名的角落里，这些文字可以稍微喘口气。它们不会知道我是谁，我也不必为它们负责。就让它们在这里慢慢腐烂吧，像所有见不得光的秘密一样。',
+          pipeline: ['garble', 'blur'],
+          createdAtOffset: 80,
+          isAnonymous: true
         }
       ],
       '时间旅人': [
@@ -235,6 +244,22 @@ export const useDiaryStore = defineStore('diary', () => {
           text: '在量子的世界里，一切可能性同时存在。我梦见自己同时出现在过去和未来，所有的记忆交织在一起，变成了无法辨认的乱码。这就是数字存在的本质吗？',
           pipeline: ['pixelate', 'garble', 'wave'],
           createdAtOffset: 800
+        },
+        {
+          title: '无题',
+          type: 'loveLetter',
+          text: '我写了很多遍，又删掉了很多遍。有些情感太重，无法署名；有些思念太轻，不值得被记住。就让它留在这里吧，不带走任何名字，只留下腐烂的痕迹。',
+          pipeline: ['blur', 'wave', 'chroma'],
+          createdAtOffset: 120,
+          isAnonymous: true
+        },
+        {
+          title: '深夜呓语',
+          type: 'nightmare',
+          text: '凌晨三点，我又醒了。窗外的城市灯火阑珊，像撒了一地的碎星。我是谁？我在这里做什么？这些问题在深夜变得格外清晰，又格外没有意义。',
+          pipeline: ['garble', 'pixelate'],
+          createdAtOffset: 250,
+          isAnonymous: true
         }
       ]
     }
@@ -287,6 +312,7 @@ export const useDiaryStore = defineStore('diary', () => {
           },
           pipeline,
           isPublic: true,
+          isAnonymous: content.isAnonymous ?? false,
           schedule: {
             publishAt: null,
             decayStartAt: null,
@@ -308,7 +334,8 @@ export const useDiaryStore = defineStore('diary', () => {
     title: string,
     text: string,
     pipeline: PipelineStep[] = [],
-    schedule: Partial<DiarySchedule> = {}
+    schedule: Partial<DiarySchedule> = {},
+    isAnonymous = false
   ): Diary {
     const now = globalTimeline.getTime()
     
@@ -341,6 +368,7 @@ export const useDiaryStore = defineStore('diary', () => {
       },
       pipeline,
       isPublic: true,
+      isAnonymous,
       schedule: fullSchedule,
       decayStartTime: fullSchedule.decayStartAt
     }
@@ -488,8 +516,8 @@ export const useDiaryStore = defineStore('diary', () => {
       const author = userStore.getUserById(diary.ownerId)
       return {
         diary,
-        authorName: author?.name || '匿名作者',
-        authorId: diary.ownerId
+        authorName: diary.isAnonymous ? '匿名投递' : author?.name || '匿名作者',
+        authorId: diary.isAnonymous ? '' : diary.ownerId
       }
     })
   }

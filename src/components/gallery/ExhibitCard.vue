@@ -85,8 +85,12 @@ function goToDetail(e: Event) {
 
 function visitAuthor(e: Event) {
   e.stopPropagation()
-  router.push(`/visit/${props.exhibit.authorId}`)
+  if (!props.exhibit.diary.isAnonymous && props.exhibit.authorId) {
+    router.push(`/visit/${props.exhibit.authorId}`)
+  }
 }
+
+const isAnonymous = computed(() => props.exhibit.diary.isAnonymous)
 </script>
 
 <template>
@@ -121,6 +125,15 @@ function visitAuthor(e: Event) {
       </div>
 
       <div 
+        v-if="isAnonymous"
+        class="absolute top-2 left-2 bg-purple-900/70 text-purple-200 px-2 py-1 rounded text-xs font-vt323 flex items-center gap-1"
+      >
+        <span>🎭</span>
+        <span>匿名投递</span>
+      </div>
+      
+      <div 
+        v-else
         class="absolute top-2 left-2 bg-black/60 text-white px-2 py-1 rounded text-xs font-vt323 flex items-center gap-1 cursor-pointer hover:bg-black/80 transition-colors"
         @click="visitAuthor"
       >
@@ -155,13 +168,19 @@ function visitAuthor(e: Event) {
         </span>
       </div>
       
-      <div class="mt-2 pt-2 border-t border-gray-800">
+      <div v-if="!isAnonymous" class="mt-2 pt-2 border-t border-gray-800">
         <button
           class="w-full btn-pixel text-diary-fresh border-diary-fresh text-xs opacity-70 hover:opacity-100 transition-opacity"
           @click.stop="visitAuthor"
         >
           🏠 参观 {{ exhibit.authorName }} 的日记墙
         </button>
+      </div>
+      
+      <div v-else class="mt-2 pt-2 border-t border-gray-800">
+        <p class="text-xs text-gray-500 font-vt323 text-center">
+          🎭 这是一篇匿名日记
+        </p>
       </div>
     </div>
   </div>
